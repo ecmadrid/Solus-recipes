@@ -1,0 +1,35 @@
+name       : gnome-shell-extension-caffeine
+version    : 59
+release    : 1
+source     :
+    - https://github.com/eonpatapon/gnome-shell-extension-caffeine/archive/refs/tags/v59.zip : 3db6be5ecfc4aae5d3f38e83803a184cf8f18f513a232e573992210927a44e51
+license    : GPL-2.0-or-later
+component  : desktop.gnome.extensions
+summary    : Keep your screen awake
+description: |
+    Caffeine is a GNOME Shell extension that allows the user to easily inhibit auto-suspend and screen-blanking.
+builddeps  :
+    - gettext
+    - glib2-devel
+build      : |
+    # No usamos %make para evitar que intente crear el .zip fallido.
+    # Simplemente compilamos las traducciones si existen.
+    if [ -d "po" ]; then
+        msgfmt po/es.po -o po/es.mo || true
+    fi
+install    : |
+    EXT_ID="caffeine@patapon.info"
+    DEST_DIR="$installdir/usr/share/gnome-shell/extensions/$EXT_ID"
+    
+    install -d -m 0755 "$DEST_DIR"
+
+    # Entramos en la carpeta donde está el código
+    cd "caffeine@patapon.info"
+
+    # Copiamos solo los archivos que existen realmente (sin stylesheet.css)
+    # He añadido 'convenience.js' que suele ser común en esta extensión
+    cp -r *.js metadata.json icons/ preferences/ "$DEST_DIR/"
+    
+    # Instalamos los esquemas (están dentro de la carpeta de la extensión)
+    install -d -m 0755 "$installdir/usr/share/glib-2.0/schemas"
+    install -m 0644 schemas/*.xml "$installdir/usr/share/glib-2.0/schemas/"
