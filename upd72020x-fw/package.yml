@@ -1,0 +1,16 @@
+name       : upd72020x-fw
+version    : 1.0.0
+release    : 1
+source     :
+    - https://web.archive.org/web/20240316231746if_/https://codeload.github.com/denisandroid/uPD72020x-Firmware/tar.gz/refs/tags/1.0.0 : 6e84b9f2e447ac2df0a0481cdce5a9a9cf4aaec1f188606a4edae170fd87a277
+license    : custom
+component  : system.utils
+summary    : Renesas uPD720201 / uPD720202 USB 3.0 chipsets firmware
+description: |
+    Firmware for Renesas uPD720201 and uPD720202 USB 3.0 chipsets. This package provides the missing firmware file often required for these controllers to function correctly.
+install    : |
+    # Instalamos el firmware en la ruta estándar de Linux
+    install -Dm0644 "UPDATE.mem" "$installdir/usr/lib/firmware/renesas_usb_fw.mem"
+    
+    # Instalamos la licencia
+    install -Dm0644 "License.rtf" "$installdir/usr/share/licenses/upd72020x-fw/LICENSE.rtf"
