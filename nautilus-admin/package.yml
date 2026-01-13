@@ -1,0 +1,26 @@
+name       : nautilus-admin
+version    : 1.1.9
+release    : 1
+source     :
+    - http://ftp.de.debian.org/debian/pool/main/n/nautilus-admin/nautilus-admin_1.1.9-3.3_all.deb : 2a1b4883cc71debd372758056cb95dfd61ba90c6acc6e9473ced196736591bb4
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Simple domain blocker from Linux Mint.
+description: |
+    Simple domain blocker from Linux Mint.
+rundeps    :
+    - nautilus-python
+    - nautilus-extension
+    - python3
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/nautilus-admin_1.1.9-3.3_all.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    mkdir -p $installdir
+    cp -r usr $installdir/

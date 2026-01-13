@@ -1,0 +1,26 @@
+name       : gnome-shell-extension-gsconnect
+version    : 71
+release    : 1
+source     :
+    - https://github.com/GSConnect/gnome-shell-extension-gsconnect/archive/refs/tags/v71.tar.gz : 4ea97b6e452836ac71994719f67aa058d695ca5202f0027941792fdc24b37c47
+license    : GPL-2.0-or-later
+component  : desktop.gnome.extensions
+summary    : KDE Connect implementation for GNOME Shell
+description: |
+    GSConnect is a complete implementation of KDE Connect especially for GNOME Shell with Nautilus, Chrome and Firefox integration.
+builddeps  :
+    - pkgconfig(glib-2.0)
+    - pkgconfig(gobject-introspection-1.0)
+    - libxml2-devel
+    - openssl-devel
+rundeps    :
+    - nautilus-python
+    - python-gobject
+    - openssl
+    - libhandy
+setup      : |
+    %meson_configure
+build      : |
+    %ninja_build
+install    : |
+    %ninja_install

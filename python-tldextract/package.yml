@@ -1,0 +1,26 @@
+name       : python-tldextract
+version    : 5.1.2
+release    : 2
+source     :
+    - http://ftp.de.debian.org/debian/pool/main/t/tldextract/python3-tldextract_5.1.2-2_all.deb : fbb45167c51d53cbbda7608552e13ce7e03caf778f8ca71452342917ad9e602d
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Python tldextract extension.
+description: |
+    Python tldextract extension.
+rundeps    :
+    - python3
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/python3-tldextract_5.1.2-2_all.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    mkdir -p $installdir
+    mv usr/lib/python3/dist-packages usr/lib/python3/site-packages
+    mv usr/lib/python3 usr/lib/python3.12
+    cp -r usr $installdir/

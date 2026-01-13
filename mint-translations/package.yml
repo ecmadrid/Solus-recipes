@@ -1,0 +1,23 @@
+name       : mint-translations
+version    : 2026.01.28
+release    : 1
+source     :
+    - http://packages.linuxmint.com/pool/main/m/mint-translations/mint-translations_2026.01.08_all.deb : 5676a38ba48caf2a3bb96acd3c232cea375452fc407adddcbc6a1279f48c590e
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Translations files form adapted Linux Mint applications.
+description: |
+     Translations files form adapted Linux Mint applications.
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/mint-translations_2026.01.08_all.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    
+    mkdir -p $installdir
+    cp -r usr $installdir/

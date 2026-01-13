@@ -1,0 +1,17 @@
+name       : pix
+version    : 3.4.10
+release    : 1
+source     :
+    - https://github.com/linuxmint/pix/archive/refs/tags/3.4.10.zip : 362a11323458ed957940577c2fa5bdca0dd8da88ac4759fdb45f15661c24b041
+license    : GPL-2.0-only
+component  : system.utils
+summary    : Picture management system from Linux Mint.
+description: |
+    Picture management system from Linux Mint.
+setup	   : |
+    %meson_configure   
+build      : |
+    %ninja_build
+install    : |
+    %ninja_install
+

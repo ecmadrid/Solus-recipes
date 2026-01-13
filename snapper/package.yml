@@ -1,0 +1,33 @@
+name       : snapper
+version    : 0.12.1
+release    : 2
+source     :
+    - https://github.com/openSUSE/snapper/archive/refs/tags/v0.12.1.tar.gz : eec9de03c8c224ac06e0b2970fde4c37cf89f848b4b49c904e8ee00bb7c3aff3
+license    : GPL-2.0-only
+component  : system.utils
+summary    : Tool for Linux file system snapshots
+description: |
+    Snapper is a tool for Linux file system snapshots. It can create and manage snapshots of BTRFS file systems and LVM volumes.
+builddeps  :
+    - pkgconfig(mount)
+    - pkgconfig(libxml-2.0)
+    - pkgconfig(dbus-1)
+    - pkgconfig(json-c)
+    - pkgconfig(ncurses)
+    - libboost-devel
+    - acl-devel
+    - zlib-devel
+    - e2fsprogs-devel
+    - docbook-xsl
+    - gtest-devel
+    - libselinux-devel
+    - btrfs-progs-devel
+    - json-c-devel
+    - e2fsprogs-devel
+build      : |
+    %make -f Makefile.repo
+install    : |
+    install -d -m 0755 %{installroot}/etc/sysconfig
+    touch %{installroot}/etc/sysconfig/snapper
+    %make_install
+

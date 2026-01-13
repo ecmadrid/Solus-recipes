@@ -1,0 +1,24 @@
+name       : mintnanny
+version    : 1.6.0
+release    : 1
+source     :
+    - http://packages.linuxmint.com/pool/main/m/mintnanny/mintnanny_1.6.0_all.deb : b7cc0bec27578fe5b19c0684fb35a6f649ed901c1d65c9acf02973ac2053df15
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Simple domain blocker from Linux Mint.
+description: |
+    Simple domain blocker from Linux Mint.
+rundeps    :
+    - python3
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/mintnanny_1.6.0_all.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    mkdir -p $installdir
+    cp -r usr $installdir/

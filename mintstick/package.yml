@@ -1,0 +1,37 @@
+name       : mintstick
+version    : 1.6.6
+release    : 2
+source     :
+    - http://packages.linuxmint.com/pool/main/m/mintstick/mintstick_1.6.6_all.deb : ee4790f2e4a3c79a1cb15791a53908679e6055156ea8a33b4e29a400a793b4fc
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Graphical tool that allows you to format USB sticks and create bootable USB sticks.
+description: |
+     Graphical tool that allows you to format USB sticks and create bootable USB sticks.
+rundeps    :
+    - python3
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/mintstick_1.6.6_all.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    
+    # --- Parche de compatibilidad Python 3.12 (Monkey Patch) ---
+    # Definimos el bloque de código a inyectar
+    PATCH="import collections\nif not hasattr(collections, 'Sequence'):\n    import collections.abc\n    collections.Sequence = collections.abc.Sequence"
+
+    # Lo inyectamos en la línea 2 de los scripts principales
+    for file in raw_write.py mintstick.py format_tester.py; do
+        if [ -f "usr/lib/mintstick/$file" ]; then
+            sed -i "2i $PATCH" "usr/lib/mintstick/$file"
+        fi
+    done
+    # ---------------------------------------------------------
+    
+    mkdir -p $installdir
+    cp -r usr $installdir/

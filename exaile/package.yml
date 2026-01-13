@@ -1,0 +1,15 @@
+name       : exaile
+version    : 4.2.1
+release    : 1
+source     :
+    - https://github.com/exaile/exaile/releases/download/4.2.1/exaile-4.2.1.tar.gz : b8c287f6b6e2543f88048ca1adc48369a54b63c1ad68216bd2b655b84181084b
+license    : GPL-2.0-only
+component  : system.utils
+summary    : GTK music player.
+description: |
+    GTK music player.
+build      : |
+    %make
+install    : |
+    %make_install PREFIX=/usr
+

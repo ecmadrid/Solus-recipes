@@ -1,0 +1,26 @@
+name       : autofirma
+version    : 1.9
+release    : 2
+source     :
+    - https://firmaelectronica.gob.es/content/dam/firmaelectronica/descargas-software/autofirma19/Autofirma_Linux_Debian.zip : c29c251f2ee9f00dfc87f9582677dbd436a83565986ab0417ff065ceae716798
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : true
+summary    : Aplicación de firma electrónica desarrollada por el Ministerio de Asuntos Económicos y Transformación Digital.
+description: |
+    Herramienta de escritorio con interfaz gráfica que permite la ejecución de operaciones de firma de ficheros locales en entornos de escritorio.
+rundeps    :
+    - openjdk-21
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    unzip -o $sources/Autofirma_Linux_Debian.zip
+    ar x $sources/Autofirma_Linux_Debian/autofirma_1_9.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    ln -s /usr/lib/openjdk-21/bin/java usr/bin/java    
+    mkdir -p $installdir
+    cp -r usr $installdir/

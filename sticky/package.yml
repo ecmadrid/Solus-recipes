@@ -1,0 +1,17 @@
+name       : sticky
+version    : 2.0.3
+release    : 1
+source     :
+    - https://github.com/linuxmint/sticky/archive/refs/tags/1.30.tar.gz : d664fe22d2c6ce62cb102b8501eb68cbfc769ab88af43a103be03d338128442a
+license    : GPL-2.0-only
+component  : system.utils
+summary    : Notes from Linux Mint.
+description: |
+    Notes from Linux Mint.
+setup      : |
+    %meson_configure
+build      : |
+    %ninja_build
+install    : |
+    %ninja_install
+

@@ -1,0 +1,46 @@
+name       : cups-pdf
+version    : 3.0.2
+release    : 4
+source     :
+    - https://www.cups-pdf.de/src/cups-pdf_3.0.2.tar.gz : 56284001f40da9854e56215527e292de4811ce349e27d7a3e8add35c72da2f95
+license    : GPL-2.0-or-later
+component  : system.printing
+summary    : PDF printer backend for CUPS
+description: |
+    CUPS-PDF is designed to produce PDF files in a heterogeneous network by providing a PDF printer on the central fileserver.
+builddeps  :
+    - pkgconfig(cups)
+rundeps    :
+    - cups
+    - ghostscript
+setup      : |
+    # No hay script de configuración
+    true
+build      : |
+    cd src
+    $CC $CFLAGS $LDFLAGS cups-pdf.c -o cups-pdf -lcups
+install    : |
+    # 1. Instalamos el binario (CUPS exige 0700 para backends)
+    install -D -m 0700 src/cups-pdf $installdir/usr/lib64/cups/backend/cups-pdf
+    
+    # 2. Instalamos modelos PPD
+    install -D -m 0644 extra/CUPS-PDF_noopt.ppd $installdir/usr/share/cups/model/CUPS-PDF_noopt.ppd
+    install -D -m 0644 extra/CUPS-PDF_opt.ppd $installdir/usr/share/cups/model/CUPS-PDF_opt.ppd
+
+    # 3. Instalamos configuración
+    install -D -m 0644 extra/cups-pdf.conf $installdir/etc/cups/cups-pdf.conf
+
+    # --- TUNEO QUIRÚRGICO PARA SOLUS ---
+    
+    # A. Ajuste del Grupo: Activamos 'Grp lp' de forma limpia
+    # Primero nos aseguramos de que cualquier resto de 'cups' sea 'lp'
+    sed -i "s/Grp cups/Grp lp/g" $installdir/etc/cups/cups-pdf.conf
+    # Descomentamos la línea de grupo si está comentada
+    sed -i "s|^#Grp lp|Grp lp|" $installdir/etc/cups/cups-pdf.conf
+
+    # B. Ajuste de la Ruta de Salida: 
+    # Usamos un patrón que solo afecte a la línea de Out comentada, no a los encabezados
+    sed -i "s|^#Out /var/spool/cups-pdf/\${USER}|Out \${HOME}/PDF|" $installdir/etc/cups/cups-pdf.conf
+
+    # C. Directorio de Spool: Necesario como espacio de trabajo temporal
+    install -d -m 1777 $installdir/var/spool/cups-pdf

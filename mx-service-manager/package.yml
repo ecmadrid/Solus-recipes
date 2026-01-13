@@ -1,0 +1,22 @@
+name       : mx-service-manager
+version    : 25.4
+release    : 1
+source     :
+    - https://mxrepo.com/mx/repo/pool/main/m/mx-service-manager/mx-service-manager_25.4_amd64.deb : 86d21d4087518b427e3d3dcdfac3bb5fb92586f49d841735281568784cf74f7d
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Qt GUI tool to manage services from MX-Linux.
+description: |
+     Qt GUI tool to manage services from MX-Linux.
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/mx-service-manager_25.4_amd64.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    mkdir -p $installdir
+    cp -r usr $installdir/

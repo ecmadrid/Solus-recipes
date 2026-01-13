@@ -1,0 +1,24 @@
+name       : btrfsmaintenance
+version    : 0.5.2
+release    : 1
+source     :
+    - http://ftp.de.debian.org/debian/pool/main/b/btrfsmaintenance/btrfsmaintenance_0.5.2-1_all.deb : 94039f31af7d4e2668e729049ad2fc919790738ffc4c21d9f8020fc3a535d39e
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Automate btrfs maintenance tasks on mountpoints or directories.
+description: |
+     This is a set of scripts for the btrfs filesystem that automates the following maintenance tasks: scrub, balance, trim, and defragment. Tasks are enabled, disabled, scheduled, and customised from a single text file. The default configuration assumes an installation profile where '/' is a btrfs filesystem. The default values have been chosen as an even compromise between time to complete maintenance, improvement in filesystem performance, and minimisation of resources taken from other processes. Please note that I/O priority scheduling requires the use of BFQ or CFQ, and not noop, deadline, anticipatory, nor the new mq-deadline which uses blk-mq.
+rundeps    :
+    - python3
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/btrfsmaintenance_0.5.2-1_all.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    mkdir -p $installdir
+    cp -r usr $installdir/

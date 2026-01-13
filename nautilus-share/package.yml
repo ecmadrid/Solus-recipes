@@ -1,0 +1,24 @@
+name       : nautilus-share
+version    : 0.7.5
+release    : 1
+source     :
+    - http://ftp.de.debian.org/debian/pool/main/n/nautilus-share/nautilus-share_0.7.5-1_amd64.deb : 10e67fdba9f6f6042a4fd346900a4a1d363231a71c3c87624b46fb11c7593738
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Nautilus share extension.
+description: |
+     Nautilus share extension.
+rundeps    :
+    - python3
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/nautilus-share_0.7.5-1_amd64.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    mkdir -p $installdir
+    cp -r usr $installdir/

@@ -1,0 +1,24 @@
+name       : btrfs-assistant
+version    : 2.2
+release    : 1
+source     :
+    - http://ftp.de.debian.org/debian/pool/main/b/btrfs-assistant/btrfs-assistant_2.2-1_amd64.deb : d3bd9cd20863d17471822bf2c560fdd664ca9734f1db431c985efac7353e1bdc
+license    : GPL-3.0-or-later
+component  : system.utils
+extract	   : false
+summary    : Qt GUI tool to manage Btrfs filesystems.
+description: |
+     Btrfs Assistant is a Qt GUI management tool to make managing a Btrfs filesystem easier.
+rundeps    :
+    - python3
+setup    : |
+    # 1. Creamos un directorio temporal para extraer el contenido del deb
+    # 2. Extraemos los componentes del .deb (ar suele estar en el path de construcción)
+    ar x $sources/btrfs-assistant_2.2-1_amd64.deb
+    # 3. Extraemos el data.tar.xz dentro de nuestra carpeta temporal
+    tar xf data.tar.*
+install    : |
+    # 4. Ahora movemos TODO el contenido de 'extra' a $installroot
+    # Esto asegura que ypkg vea los archivos dentro de la "falsa raíz"
+    mkdir -p $installdir
+    cp -r usr $installdir/
