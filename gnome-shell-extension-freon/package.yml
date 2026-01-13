@@ -1,0 +1,34 @@
+name       : gnome-shell-extension-freon
+version    : 60
+release    : 2
+source     :
+    - https://github.com/UshakovVasilii/gnome-shell-extension-freon/archive/refs/tags/EGO-60.zip : ac09934d20c60b699bcc1140dca656e20e30f6f8036caed1bc4bb99db724b832
+license    : GPL-2.0-or-later
+component  : desktop.gnome.extensions
+summary    : Displays CPU temperature, disk temperature, and more
+description: |
+    Freon is a GNOME Shell extension for displaying system sensors information (CPU, GPU, HDD, etc.).
+builddeps  :
+    - gettext
+    - glib2-devel
+rundeps    :
+    - lm_sensors
+install    : |
+    EXT_ID="freon@UshakovVasilii_Github.yahoo.com"
+    DEST_DIR="$installdir/usr/share/gnome-shell/extensions/$EXT_ID"
+    
+    install -d -m 0755 "$DEST_DIR"
+
+    # Entramos en la carpeta del código
+    cd "freon@UshakovVasilii_Github.yahoo.com"
+
+    # 1. Copiamos todo el contenido a la carpeta de la extensión
+    cp -r * "$DEST_DIR/"
+
+    # 2. Instalamos los esquemas en la ruta GLOBAL de Solus (para que el sistema los reconozca)
+    install -d -m 0755 "$installdir/usr/share/glib-2.0/schemas"
+    install -m 0644 schemas/*.xml "$installdir/usr/share/glib-2.0/schemas/"
+
+    # 3. COMPILAMOS los esquemas dentro de la carpeta de la extensión 
+    # Esto es lo que Freon está buscando desesperadamente
+    glib-compile-schemas "$DEST_DIR/schemas/"

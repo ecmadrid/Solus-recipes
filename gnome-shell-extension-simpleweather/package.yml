@@ -1,0 +1,39 @@
+name       : gnome-shell-extension-simpleweather
+version    : 71
+release    : 1
+source     :
+    - https://github.com/romanlefler/SimpleWeather/archive/refs/tags/v49.1.1.zip : cf03ca15c5ab9751930f8ad09aea2750696954367a5bd06b958e71e93f4d954d
+license    : GPL-3.0-or-later
+component  : desktop.gnome.extensions
+summary    : Simple weather widget for GNOME Shell
+description: |
+    A simple weather extension for GNOME Shell that displays current weather conditions and forecasts.
+builddeps  :
+    - nodejs
+    - typescript
+    - gettext
+    - glib2-devel
+setup      : |
+    #Required to download the TypeScript build tools.
+    npm install
+build      : |
+    %make
+install    : |
+    # 1. Definimos rutas
+    EXT_ID="simple-weather@romanlefler.com"
+    DEST_DIR="$installdir/usr/share/gnome-shell/extensions/$EXT_ID"
+
+    # 2. Creamos el directorio de destino
+    install -d -m 0755 "$DEST_DIR"
+
+    # 3. Copiamos todo el contenido de dist/build al destino
+    # Aquí ya van los .js, el metadata.json, iconos y la carpeta schemas
+    cp -r dist/build/* "$DEST_DIR/"
+
+    # 4. Instalamos los esquemas en la ruta global de Solus (Paso crítico)
+    # Como ya están en $DEST_DIR/schemas gracias al cp anterior, los movemos
+    install -d -m 0755 "$installdir/usr/share/glib-2.0/schemas"
+    mv "$DEST_DIR/schemas/"*.xml "$installdir/usr/share/glib-2.0/schemas/"
+    
+    # 5. Limpieza: eliminamos la carpeta schemas de la extensión para evitar conflictos
+    rm -rf "$DEST_DIR/schemas"
