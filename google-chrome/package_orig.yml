@@ -1,0 +1,42 @@
+name       : google-chrome
+version    : 143.0.7499.169
+release    : 1
+source     :
+    - https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_143.0.7499.169-1_amd64.deb : 8fd7838197cff488ba0775e12d817ab7aa19abccd64699744e49b81ae0833ca1
+license    : Proprietary
+component  : network.browser
+extract	   : false
+summary    : The popular web browser by Google (Stable Channel)
+description: |
+    Google Chrome is a browser that combines a minimal design with sophisticated technology to make the web faster, safer, and easier.
+builddeps  :
+    - binutils
+rundeps    :
+    - libgtk-3
+    - cups
+    - alsa-lib
+    - libx11
+    - libnss
+    - xdg-utils
+    - liberation-fonts-ttf
+install    : |
+    # Usamos el nombre del archivo tal cual lo bajó ypkg, 
+    # pero le decimos que lo busque en la carpeta de fuentes ($sourcesdir)
+    ar x $sources/google-chrome-stable_143.0.7499.169-1_amd64.deb
+    
+    # Una vez que 'ar' extrae el contenido, 'data.tar.xz' aparecerá 
+    # en tu carpeta actual. Ahí ya puedes seguir normal:
+    mkdir data
+    tar xf data.tar.* -C data
+    mkdir -p $installdir
+    cp -r data/* $installdir
+
+    # (El resto de tus comandos sed, ln -s y rm...)
+    sed -i 's|/usr/bin/google-chrome-stable|/opt/google/chrome/google-chrome|g' $installdir/usr/share/applications/google-chrome.desktop
+    
+    install -d -m 0755 $installdir/usr/bin
+    rm -f $installdir/usr/bin/google-chrome-stable
+    ln -s /opt/google/chrome/google-chrome $installdir/usr/bin/google-chrome-stable
+
+    rm -rf $installdir/etc/cron.daily
+    rm -rf $installdir/opt/google/chrome/cron

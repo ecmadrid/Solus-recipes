@@ -1,0 +1,27 @@
+name        : appeditor
+version     : 1.1.5
+release     : 1
+source      :
+    - https://github.com/donadigo/appeditor/archive/refs/tags/1.1.5.zip : 94ba7508435b549a0538f144800a035b3333e885c5a2e347693877a14cf24cc8
+license     : GPL-3.0-or-later
+component   : desktop.utils
+summary     : Edita el menú de aplicaciones fácilmente
+description : |
+    AppEditor es una herramienta que permite editar las entradas del menú de aplicaciones. Puedes ocultar/mostrar apps, crear nuevas entradas, cambiar iconos y nombres de forma visual.
+builddeps   :
+    - pkgconfig(granite)
+    - pkgconfig(gtk+-3.0)
+    - pkgconfig(libhandy-1)
+    - pkgconfig(gee-0.8)
+    - granite-devel
+    - libhandy-devel
+    - libgee-devel
+    - vala
+    - meson
+    - gettext
+setup       : |
+    %meson_configure
+build       : |
+    %ninja_build
+install     : |
+    %ninja_install
