@@ -1,0 +1,81 @@
+name       : google-chrome
+version    : 143.0.7499.192
+release    : 1
+source     :
+    - https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_143.0.7499.192-1_amd64.deb : 6484c286dc8089f0eb41d124b96e3ef4c4cb0ff289dc0f8698e1f1b851fbc834
+license    : Proprietary
+component  : network.browser
+extract    : false
+summary    : The popular web browser by Google (Stable Channel)
+description: |
+    Google Chrome is a browser that combines a minimal design with sophisticated technology to make the web faster, safer, and easier.
+builddeps  :
+    - binutils
+rundeps    :
+    - libgtk-3
+    - cups
+    - alsa-lib
+    - libx11
+    - libnss
+    - xdg-utils
+    - liberation-fonts-ttf
+
+install    : |
+    ar x $sources/google-chrome-stable_143.0.7499.192-1_amd64.deb
+
+    mkdir data
+    tar xf data.tar.* -C data
+
+    mkdir -p $installdir
+    cp -r data/* $installdir
+
+    sed -i 's|/usr/bin/google-chrome-stable|/opt/google/chrome/google-chrome|g' \
+        $installdir/usr/share/applications/google-chrome.desktop
+
+    install -d -m 0755 $installdir/usr/bin
+    rm -f $installdir/usr/bin/google-chrome-stable
+    
+    #ln -s /opt/google/chrome/google-chrome \
+    #    $installdir/usr/bin/google-chrome-stable
+
+    rm -rf $installdir/etc/cron.daily
+    rm -rf $installdir/opt/google/chrome/cron
+
+    install -d -m 0755 \
+        $installdir/etc/opt/chrome/policies/managed
+
+    printf '%s\n' \
+    '{' \
+    '  "MetricsReportingEnabled": false,' \
+    '  "DeviceMetricsReportingEnabled": false,' \
+    '  "CrashReportingEnabled": false,' \
+    '  "CloudReportingEnabled": false,' \
+    '  "EnableNetworkPrediction": false,' \
+    '  "RLZEnabled": false,' \
+    '  "UserFeedbackAllowed": false,' \
+    '  "ChromeCleanupEnabled": false,' \
+    '  "SafeBrowsingExtendedReportingEnabled": false,' \
+    '  "UrlKeyedAnonymizedDataCollectionEnabled": false,' \
+    '  "SyncDisabled": true,' \
+    '  "ChromeVariations": false,' \
+    '  "AllowGoogleSignin": false,' \
+    '  "SearchSuggestEnabled": false' \
+    '}' \
+    > $installdir/etc/opt/chrome/policies/managed/telemetry.json
+
+    # crear wrapper directamente en /usr/bin
+
+    cat > $installdir/usr/bin/google-chrome-stable << 'EOF'
+    #!/bin/sh
+    exec /opt/google/chrome/google-chrome \
+        --disable-background-networking \
+        --disable-breakpad \
+        --disable-sync \
+        --metrics-recording-only \
+        "$@"
+    EOF
+    chmod +x $installdir/usr/bin/google-chrome-stable
+
+    # opcional: asegurar que desktop use el wrapper
+    sed -i 's|/opt/google/chrome/google-chrome|/usr/bin/google-chrome-stable|g' \
+        $installdir/usr/share/applications/google-chrome.desktop
