@@ -1,3 +1,5 @@
+Included in yml file:
+
 sudo mkdir -p /etc/sysconfig
 sudo touch /etc/sysconfig/snapper
 sudo snapper -c root create-config /
